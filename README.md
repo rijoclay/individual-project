@@ -9,25 +9,25 @@ This project builds an end-to-end data pipeline to explore how Agentic AI transf
 ## Project Structure
 
 ```
-├── 01_Input/                        Raw datasets
+├── data/                            Raw datasets
 │   ├── AgenticAI_Leadership_Dataset_v1.csv
 │   ├── agent_execution_logs.csv
 │   ├── external_leadership_benchmarks.json
 │   └── openalex_ai_leadership_papers.json
 │
-├── 02_Scripts/                      PySpark pipeline scripts
+├── src/                             PySpark pipeline scripts
 │   ├── bronze_layer.py              Raw → Cleaned data
 │   ├── silver_layer.py              Cleaned → Enriched data
 │   ├── gold_layer.py                Enriched → Analytics-ready data
 │   ├── run_spark_pipeline.py        Pipeline runner
 │   └── test_pipeline.py             Pipeline tests
 │
-├── 08_Reference/                    Planned architecture diagrams
+├── reference/                       Planned architecture diagrams
 │   ├── architecture_diagram.html    Full system architecture
 │   ├── etl_architecture.png         ETL flow diagram
 │   └── gantt_chart.png              Project timeline
 │
-├── 07_Reports/
+├── docs/
 │   └── Richard_Clay_Proposal.docx   Project proposal (EN)
 │
 └── README.md
