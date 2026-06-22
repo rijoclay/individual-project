@@ -1,34 +1,27 @@
-# Data Engineering Pipeline: Agentic AI Leadership
+# Individual Project: AI Customer Support Agent
 
-Ini adalah repository untuk Individual Project 2 (Data Engineering). Project ini membangun pipeline data end-to-end pakai PySpark dengan konsep Medallion Architecture (Bronze, Silver, Gold) untuk menganalisis impact Agentic AI terhadap produktivitas leadership di berbagai industri.
+An end-to-end Data Engineering pipeline and AI integration project for my university coursework. This project builds an intelligent conversational agent that understands product data and answers customer inquiries dynamically.
 
-## Struktur Folder
+## Overview
 
-- **01_Input**: Dataset mentah (CSV dari main dataset, JSON untuk benchmarks & OpenAlex papers, execution logs).
-- **02_Scripts**: Kumpulan script Python & PySpark buat jalanin ETL, Machine Learning, dan generate report/diagram.
-- **03_Output_Bronze**: Layer raw data yang di-ingest ke format Parquet.
-- **04_Output_Silver**: Layer data yang udah dibersihin, deduplikasi, dan schema-enforced.
-- **05_Output_Gold**: Layer agregasi siap pakai dan data hasil model Machine Learning.
-- **06_Visualization**: Output grafik & diagram (ERD, Arsitektur ETL, K-Means profile).
-- **07_Reports**: Laporan akhir format DOCX (Proposal, Paper, Final Report).
-- **08_Logs**: Tracking execution log tiap kali pipeline jalan.
-- **08_Reference**: Output HTML interaktif buat diagram.
+This system ingests raw product data and customer logs, processes them through a Medallion Architecture (Bronze → Silver → Gold), and leverages an AI model to handle customer queries based on the refined dataset. The goal is to automate customer support while maintaining accurate, context-aware responses.
+
+## Architecture
+
+- **Bronze Layer**: Raw data ingestion (JSON/CSV) into Parquet format.
+- **Silver Layer**: Data cleaning, schema enforcement, and deduplication.
+- **Gold Layer**: Aggregated business-level data and ML features ready for the AI agent.
 
 ## Tech Stack
 
-- **Core**: Apache Spark (PySpark), Python.
-- **Machine Learning**: K-Means Clustering, Logistic Regression.
-- **Storage**: Parquet (Snappy compression).
+- **Core Engine**: Apache Spark (PySpark)
+- **Language**: Python
+- **Storage**: Parquet (Snappy compressed)
+- **ML & AI**: K-Means Clustering (User Profiling) & Logistic Regression
 
-## Model Performance
+## Execution
 
-Pipeline ini juga melatih model ML di layer Gold:
-- **K-Means Clustering**: Silhouette Score = 0.5276
-- **Logistic Regression**: Accuracy = 55.44% (F1-Score = 46.59%)
-
-## Cara Run
-
-Untuk ngejalanin full pipeline dari Bronze sampai Gold, cukup run master script ini:
+To run the entire pipeline from raw data to Gold layer:
 
 ```bash
 python 02_Scripts/run_spark_pipeline.py
