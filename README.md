@@ -1,10 +1,10 @@
-# Individual Project — Agentic AI Leadership
+# Data Engineering Individual Project
 
-A Data Engineering project proposal outlining an end-to-end analytics pipeline using PySpark medallion architecture (Bronze → Silver → Gold) to explore the impact of Agentic AI on modern leadership.
+A Data Engineering project proposal outlining an end-to-end analytics pipeline using PySpark medallion architecture (Bronze → Silver → Gold).
 
 ## Overview
 
-This repository contains the proposal phase of the project. The planned data pipeline will ingest multi-source data, clean and enrich it, and ultimately generate analytics-ready outputs for clustering and industry analysis.
+This repository contains the proposal phase of the project. The planned data pipeline will ingest multi-source data, clean and enrich it, and ultimately generate analytics-ready outputs.
 
 ## Project Structure
 
@@ -37,10 +37,10 @@ This repository contains the proposal phase of the project. The planned data pip
 
 | Source | Format | Description |
 |--------|--------|-------------|
-| AgenticAI_Leadership_Dataset_v1.csv | CSV | Main dataset (1,500+ records, 11 industries) |
-| agent_execution_logs.csv | CSV | Simulated AI agent execution logs |
-| external_leadership_benchmarks.json | JSON | External leadership benchmark data |
-| openalex_ai_leadership_papers.json | JSON | OpenAlex research papers on AI leadership |
+| AgenticAI_Leadership_Dataset_v1.csv | CSV | Main dataset for analysis |
+| agent_execution_logs.csv | CSV | Execution log dataset |
+| external_leadership_benchmarks.json | JSON | Benchmark dataset |
+| openalex_ai_leadership_papers.json | JSON | Academic reference dataset |
 
 ## Planned Pipeline Architecture
 
@@ -65,10 +65,10 @@ Raw Data (CSV/JSON/Logs)
 
 ## Proposed Methodology
 
-1. **Data Collection** — Ingest multi-source data (CSV, JSON, logs, OpenAlex API).
+1. **Data Collection** — Ingest multi-source data (CSV, JSON, logs, API references).
 2. **Bronze Layer** — Remove duplicates, handle missing values, and validate schemas.
-3. **Silver Layer** — Enrich with industry tags, standardize columns, and join datasets.
-4. **Gold Layer** — Generate analytics outputs and train clustering models (e.g., K-Means, Logistic Regression).
+3. **Silver Layer** — Enrich and transform data, standardize columns, and join datasets.
+4. **Gold Layer** — Generate analytics-ready outputs and evaluate models.
 
 ## Requirements
 
