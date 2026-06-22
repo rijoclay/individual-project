@@ -1,48 +1,84 @@
-# Individual Project 2 — Data Engineering Pipeline
+# Individual Project — Agentic AI Leadership
 
-Tugas individu mata kuliah Data Engineering — proposal data pipeline yang menganalisis peran **Agentic AI** dalam mendukung kepemimpinan dan pengambilan keputusan di organisasi modern.
+A Data Engineering project analyzing **Agentic AI in Leadership** using PySpark medallion architecture (Bronze → Silver → Gold).
 
-## Soal & Poin-Poin
+## Overview
 
-### Task 1: Problem Identification
-**Domain:** AI Agents for Business Leadership  
-**Problem:** Agentic AI (sistem otonom yang mampu beradaptasi tanpa intervensi manusia) semakin digunakan untuk mendukung fungsi kepemimpinan. Perlu dipahami bagaimana efektivitasnya dalam decision-making, faktor yang mempengaruhi performa, dan kontribusinya terhadap produktivitas organisasi.
+This project builds an end-to-end data pipeline to explore how Agentic AI transforms leadership across industries. The pipeline ingests data from multiple sources, cleans and enriches it, then generates analytics-ready outputs for clustering and industry analysis.
 
-### Task 2: Objectives
-1. Mengukur efektivitas AI agents dalam decision-making
-2. Mengidentifikasi faktor kunci yang mempengaruhi performa AI agents
-3. Menganalisis kontribusi AI agents terhadap leadership efficiency & organizational productivity
+## Project Structure
 
-### Task 3: Methodology
-- **Data Source:** Public dataset dari Kaggle (5,500 records)
-- **Bronze Layer:** Raw data ingestion (CSV, JSON, logs) via PyArrow, + metadata (ingestion_date, data_source)
-- **Silver Layer:** Cleaning, deduplikasi, imputasi missing values, standardisasi kategorikal, derived columns
-- **Gold Layer:** Agregasi + ML (K-Means, Logistic Regression)
-- **Storage:** Data Lakehouse (Parquet + Snappy)
-
-### Task 4: System Architecture
-ETL pipeline — Bronze → Silver → Gold. Setiap layer diproses dengan PySpark di lingkungan local.
-
-### Task 5: Project Timeline
-20 May 2026 – 10 July 2026
-
-### Task 6: Documentation
-Proposal, Paper, Final Report, dan Presentasi.
-
-## Struktur Folder
-
-- `01_Input/` — Dataset mentah (CSV, JSON, logs)
-- `02_Scripts/` — Script ETL, ML, generate report
-- `03_Output_Bronze/` — Data mentah dalam Parquet
-- `04_Output_Silver/` — Data bersih, siap analisis
-- `05_Output_Gold/` — Agregasi + model ML
-- `06_Visualization/` — Grafik & diagram
-- `07_Reports/` — Proposal, Paper, Final Report (.docx)
-- `08_Logs/` — Execution logs
-- `08_Reference/` — Diagram arsitektur
-
-## Run Pipeline
-
-```bash
-python 02_Scripts/run_spark_pipeline.py
 ```
+├── 01_Input/                        Raw datasets
+│   ├── AgenticAI_Leadership_Dataset_v1.csv
+│   ├── agent_execution_logs.csv
+│   ├── external_leadership_benchmarks.json
+│   └── openalex_ai_leadership_papers.json
+│
+├── 02_Scripts/                      PySpark pipeline scripts
+│   ├── bronze_layer.py              Raw → Cleaned data
+│   ├── silver_layer.py              Cleaned → Enriched data
+│   ├── gold_layer.py                Enriched → Analytics-ready data
+│   ├── run_spark_pipeline.py        Pipeline runner
+│   └── test_pipeline.py             Pipeline tests
+│
+├── 08_Reference/                    Planned architecture diagrams
+│   ├── architecture_diagram.html    Full system architecture
+│   ├── etl_architecture.png         ETL flow diagram
+│   └── gantt_chart.png              Project timeline
+│
+├── 07_Reports/
+│   └── Richard_Clay_Proposal.docx   Project proposal (EN)
+│
+└── README.md
+```
+
+## Data Sources
+
+| Source | Format | Description |
+|--------|--------|-------------|
+| AgenticAI_Leadership_Dataset_v1.csv | CSV | Main dataset (1,500+ records, 11 industries) |
+| agent_execution_logs.csv | CSV | AI agent execution logs |
+| external_leadership_benchmarks.json | JSON | External leadership benchmark data |
+| openalex_ai_leadership_papers.json | JSON | OpenAlex research papers on AI leadership |
+
+## Pipeline Architecture
+
+```
+Raw Data (CSV/JSON/Logs)
+       │
+       ▼
+   ┌─────────┐
+   │ BRONZE  │  Clean, validate, deduplicate
+   └────┬────┘
+        │
+        ▼
+   ┌─────────┐
+   │ SILVER  │  Enrich, transform, standardize
+   └────┬────┘
+        │
+        ▼
+   ┌─────────┐
+   │  GOLD   │  Analytics-ready outputs, ML models
+   └─────────┘
+```
+
+## Methodology
+
+1. **Data Collection** — Ingest multi-source data (CSV, JSON, logs, OpenAlex API)
+2. **Bronze Layer** — Remove duplicates, handle missing values, validate schema
+3. **Silver Layer** — Enrich with industry tags, standardize columns, join datasets
+4. **Gold Layer** — Generate analytics outputs, train clustering models (K-Means, Logistic Regression)
+
+## Requirements
+
+- Python 3.10+
+- Apache Spark / PySpark
+- Java 11+ (Spark dependency)
+
+## Timeline
+
+- **23–24 Jun 2026** — Proposal submission
+- **9–10 Jul 2026** — Paper submission
+- **13 Jul 2026** — Final report
+- **15 Jul 2026** — Demo & presentation
