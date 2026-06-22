@@ -1,0 +1,13 @@
+[
+  {"Industry": "Education", "Benchmark_Task_Success_Rate": 72.0, "Benchmark_Productivity_Improvement": 10.5, "Benchmark_Trust_Score": 65.0},
+  {"Industry": "Energy", "Benchmark_Task_Success_Rate": 78.0, "Benchmark_Productivity_Improvement": 14.2, "Benchmark_Trust_Score": 70.0},
+  {"Industry": "Financial_Services", "Benchmark_Task_Success_Rate": 82.0, "Benchmark_Productivity_Improvement": 16.8, "Benchmark_Trust_Score": 75.0},
+  {"Industry": "Government", "Benchmark_Task_Success_Rate": 68.0, "Benchmark_Productivity_Improvement": 9.0, "Benchmark_Trust_Score": 60.0},
+  {"Industry": "Healthcare", "Benchmark_Task_Success_Rate": 76.0, "Benchmark_Productivity_Improvement": 13.0, "Benchmark_Trust_Score": 68.0},
+  {"Industry": "Logistics", "Benchmark_Task_Success_Rate": 80.0, "Benchmark_Productivity_Improvement": 15.5, "Benchmark_Trust_Score": 72.0},
+  {"Industry": "Manufacturing", "Benchmark_Task_Success_Rate": 79.0, "Benchmark_Productivity_Improvement": 14.8, "Benchmark_Trust_Score": 71.0},
+  {"Industry": "Professional_Services", "Benchmark_Task_Success_Rate": 74.0, "Benchmark_Productivity_Improvement": 11.5, "Benchmark_Trust_Score": 67.0},
+  {"Industry": "Retail", "Benchmark_Task_Success_Rate": 75.0, "Benchmark_Productivity_Improvement": 12.0, "Benchmark_Trust_Score": 66.0},
+  {"Industry": "Technology", "Benchmark_Task_Success_Rate": 85.0, "Benchmark_Productivity_Improvement": 18.0, "Benchmark_Trust_Score": 78.0},
+  {"Industry": "Telecommunications", "Benchmark_Task_Success_Rate": 77.0, "Benchmark_Productivity_Improvement": 13.8, "Benchmark_Trust_Score": 69.0}
+]

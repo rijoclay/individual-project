@@ -1,0 +1,17 @@
+{
+  "run_id": "20260619_235548",
+  "layer": "bronze",
+  "status": "completed",
+  "details": {
+    "main_csv_records": 5500,
+    "benchmark_json_records": 11,
+    "execution_logs_records": 5500,
+    "openalex_papers_records": 25
+  },
+  "output_paths": {
+    "main_dataset": "C:\\Users\\richa\\Documents\\Sem.6\\DatEng_Individual_Project\\individual_project_2\\03_Output_Bronze\\main_dataset",
+    "benchmark_data": "C:\\Users\\richa\\Documents\\Sem.6\\DatEng_Individual_Project\\individual_project_2\\03_Output_Bronze\\benchmark_data",
+    "execution_logs": "C:\\Users\\richa\\Documents\\Sem.6\\DatEng_Individual_Project\\individual_project_2\\03_Output_Bronze\\execution_logs",
+    "openalex_papers": "C:\\Users\\richa\\Documents\\Sem.6\\DatEng_Individual_Project\\individual_project_2\\03_Output_Bronze\\openalex_papers"
+  }
+}

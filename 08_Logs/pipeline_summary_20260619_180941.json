@@ -1,0 +1,22 @@
+{
+  "timestamp": "2026-06-19 18:09:41",
+  "total_time": 59.65344166755676,
+  "layers": {
+    "bronze": {
+      "status": "success",
+      "time": 20.12151551246643,
+      "output": "ers\\richa\\Documents\\Sem.6\\DatEng_Individual_Project\\individual_project_2\\03_Output_Bronze\\execution_logs\n[BRONZE] Log saved to C:\\Users\\richa\\Documents\\Sem.6\\DatEng_Individual_Project\\individual_project_2\\08_Logs\\bronze_run_20260619_180850.json\nSUCCESS: The process with PID 3436 (child process of PID 7756) has been terminated.\nSUCCESS: The process with PID 7756 (child process of PID 12128) has been terminated.\nSUCCESS: The process with PID 12128 (child process of PID 23236) has been terminated.\n"
+    },
+    "silver": {
+      "status": "success",
+      "time": 38.93141555786133,
+      "output": "ect\\individual_project_2\\04_Output_Silver\\agentic_leadership_silver\n[SILVER] Final record count: 5500\n[SILVER] Log saved to C:\\Users\\richa\\Documents\\Sem.6\\DatEng_Individual_Project\\individual_project_2\\08_Logs\\silver_run_20260619_180906.json\nSUCCESS: The process with PID 22876 (child process of PID 24144) has been terminated.\nSUCCESS: The process with PID 24144 (child process of PID 23828) has been terminated.\nSUCCESS: The process with PID 23828 (child process of PID 15640) has been terminated.\n"
+    },
+    "gold": {
+      "status": "failed",
+      "time": 0.6005105972290039,
+      "error": "_project_2\\02_Scripts\\gold_layer.py\", line 21, in <module>\n    from pyspark.ml.feature import VectorAssembler, StandardScaler\n  File \"C:\\Users\\richa\\AppData\\Local\\hermes\\hermes-agent\\venv\\Lib\\site-packages\\pyspark\\ml\\__init__.py\", line 31, in <module>\n    from pyspark.ml import (\n  File \"C:\\Users\\richa\\AppData\\Local\\hermes\\hermes-agent\\venv\\Lib\\site-packages\\pyspark\\ml\\image.py\", line 31, in <module>\n    from distutils.version import LooseVersion\nModuleNotFoundError: No module named 'distutils'\n"
+    }
+  },
+  "overall_status": "failed"
+}

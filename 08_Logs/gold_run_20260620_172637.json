@@ -1,0 +1,14 @@
+{
+  "run_id": "20260620_172637",
+  "layer": "gold",
+  "status": "completed",
+  "details": {
+    "kmeans_silhouette_score": 0.5276039188525901,
+    "lr_metrics": {
+      "accuracy": 0.554399243140965,
+      "f1_score": 0.4659303058547575,
+      "precision": 0.4033903934918448,
+      "recall": 0.554399243140965
+    }
+  }
+}

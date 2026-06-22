@@ -1,0 +1,22 @@
+{
+  "timestamp": "2026-06-20 15:00:34",
+  "total_time": 104.37180495262146,
+  "layers": {
+    "bronze": {
+      "status": "success",
+      "time": 17.080424785614014,
+      "output": "[BRONZE] Main CSV loaded: 5500 records\n[BRONZE] Benchmark JSON loaded: 11 records\n[BRONZE] Execution Logs loaded: 5500 records\n[BRONZE] OpenAlex API Papers loaded: 25 records\nSUCCESS: The process with PID 13460 (child process of PID 10916) has been terminated.\nSUCCESS: The process with PID 10916 (child process of PID 12016) has been terminated.\nSUCCESS: The process with PID 12016 (child process of PID 14040) has been terminated.\n"
+    },
+    "silver": {
+      "status": "success",
+      "time": 32.08314871788025,
+      "output": "[SILVER] Success. Records: 5500. Contextual NLP mapped OpenAlex papers to Industries.\nSUCCESS: The process with PID 17320 (child process of PID 8308) has been terminated.\nSUCCESS: The process with PID 8308 (child process of PID 10792) has been terminated.\nSUCCESS: The process with PID 10792 (child process of PID 2660) has been terminated.\n"
+    },
+    "gold": {
+      "status": "success",
+      "time": 55.2082314491272,
+      "output": "[GOLD] LR Metrics -> Accuracy: 0.5601 | F1: 0.5029 | Precision: 0.5208 | Recall: 0.5601\n[GOLD] Best LR model exported to C:\\Users\\richa\\Documents\\Sem.6\\DatEng_Individual_Project\\individual_project_2\\05_Output_Gold\\models\\lr_productivity_model\nSUCCESS: The process with PID 9036 (child process of PID 11808) has been terminated.\nSUCCESS: The process with PID 11808 (child process of PID 16052) has been terminated.\nSUCCESS: The process with PID 16052 (child process of PID 18580) has been terminated.\n"
+    }
+  },
+  "overall_status": "success"
+}

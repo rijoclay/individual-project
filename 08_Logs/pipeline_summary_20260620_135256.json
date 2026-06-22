@@ -1,0 +1,22 @@
+{
+  "timestamp": "2026-06-20 13:52:56",
+  "total_time": 116.18436908721924,
+  "layers": {
+    "bronze": {
+      "status": "success",
+      "time": 27.886154413223267,
+      "output": "[BRONZE] Main CSV loaded: 5500 records\n[BRONZE] Benchmark JSON loaded: 11 records\n[BRONZE] Execution Logs loaded: 5500 records\n[BRONZE] OpenAlex API Papers loaded: 25 records\nSUCCESS: The process with PID 12064 (child process of PID 6388) has been terminated.\nSUCCESS: The process with PID 6388 (child process of PID 15420) has been terminated.\nSUCCESS: The process with PID 15420 (child process of PID 16228) has been terminated.\n"
+    },
+    "silver": {
+      "status": "success",
+      "time": 35.2872359752655,
+      "output": "[SILVER] Success. Records: 5500. Features Integrated: Exec Logs, Benchmarks, OpenAlex.\nSUCCESS: The process with PID 15432 (child process of PID 19920) has been terminated.\nSUCCESS: The process with PID 19920 (child process of PID 1132) has been terminated.\nSUCCESS: The process with PID 1132 (child process of PID 9100) has been terminated.\n"
+    },
+    "gold": {
+      "status": "success",
+      "time": 53.01097869873047,
+      "output": "[GOLD] Silver data loaded: 5500 records.\n[GOLD] K-Means Silhouette Score: 0.5276\n[GOLD] Logistic Regression (Tuned) Accuracy: 0.5553\nSUCCESS: The process with PID 10652 (child process of PID 8960) has been terminated.\nSUCCESS: The process with PID 8960 (child process of PID 4944) has been terminated.\nSUCCESS: The process with PID 4944 (child process of PID 13544) has been terminated.\n"
+    }
+  },
+  "overall_status": "success"
+}

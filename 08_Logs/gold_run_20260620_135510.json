@@ -1,0 +1,9 @@
+{
+  "run_id": "20260620_135510",
+  "layer": "gold",
+  "status": "completed",
+  "details": {
+    "kmeans_silhouette_score": 0.5276039188525901,
+    "lr_classification_accuracy": 0.5553453169347209
+  }
+}
