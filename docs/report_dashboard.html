@@ -66,6 +66,24 @@
   .meta span { display: block; }
   hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
 
+  /* Image integration styling */
+  .workflow-img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin: 1.5rem 0 0.5rem;
+    display: block;
+  }
+  .img-caption {
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-align: center;
+    font-style: italic;
+    margin-bottom: 2rem;
+  }
+
   /* Cards for charts */
   .chart-card {
     background: var(--card);
@@ -142,12 +160,37 @@
 <section id="abstract">
   <h2>Abstract</h2>
   <p>
-    This project presents an end-to-end data engineering and machine learning pipeline for evaluating agentic AI leadership performance across eleven industry sectors. Built on a PySpark Medallion architecture (Bronze–Silver–Gold), the pipeline ingests 5,500 deployment records from Kaggle, execution telemetry logs, external industry benchmarks, and 25 OpenAlex research papers. The Silver layer applies median imputation per industry, normalizes benchmark keys (fixing a 19% join loss), and enriches records with NLP-derived sector citations. The Gold layer produces a star schema: an industry summary dimension (11 rows) and an enriched fact table (5,500 rows). Unsupervised K-Means clustering (silhouette 0.522) identifies three performance tiers—High, Average, and Low Performer—while multinomial Logistic Regression predicts productivity category from system telemetry alone (59.3% accuracy, 52.6% macro F1). A cross-industry trust gap analysis reveals that only Government agencies exhibit trust exceeding benchmarks (+3.92), whereas Technology (−16.23), Financial Services (−11.39), and Logistics (−11.30) show substantial deficits. The pipeline executes in ~53 seconds on constrained hardware (1 GB driver memory).
+    This project walks through the making of a Spark-powered pipeline that starts with raw data and ends with a practical question: are our AI agents actually earning the trust of the people using them? The pipeline processes 5,500 records from four different sources, cleans and joins them using the Medallion pattern, and applies both clustering and classification to separate high-performing deployments from the rest. The Silver layer applies median imputation per industry, normalizes benchmark keys (fixing a 19% join loss), and enriches records with NLP-derived sector citations. The Gold layer produces a star schema: an industry summary dimension (11 rows) and an enriched fact table (5,500 rows). Unsupervised K-Means clustering (silhouette 0.522) identifies three performance tiers—High, Average, and Low Performer—while multinomial Logistic Regression predicts productivity category from system telemetry alone (59.3% accuracy, 52.6% macro F1). A cross-industry trust gap analysis reveals that only Government agencies exhibit trust exceeding benchmarks (+3.92), whereas Technology (−16.23), Financial Services (−11.39), and Logistics (−11.30) show substantial deficits. The pipeline executes in ~53 seconds on constrained hardware (1 GB driver memory).
+  </p>
+</section>
+
+<section id="introduction">
+  <h2>1. Introduction</h2>
+  <p>
+    Artificial intelligence agents are increasingly making decisions that were once entirely human. However, deploying them at scale introduces challenges in monitoring and evaluation. This pipeline offers an automated mechanism to ingest, process, and analyze deployment telemetry.
+  </p>
+  <h3>1.4 Problem Identification & Objectives</h3>
+  <p>
+    More concretely, the project set out to achieve four measurable outcomes: (1) ingest and process at least 5,000 deployment records without data loss; (2) achieve zero nulls in critical join columns after Silver cleansing; (3) produce a K-Means clustering with silhouette score above 0.50; and (4) train a multiclass classifier that beats the random baseline of 33% by at least 20 percentage points. These four targets served as go/no-go gates throughout development.
+  </p>
+</section>
+
+<section id="literature">
+  <h2>2. Literature Review & Related Study</h2>
+  <p>
+    Reading across these 25 papers, a clear pattern emerges. Earlier work (2018-2021) focused almost exclusively on single-agent efficiency - how fast a bot completes a task, measured in isolation. The field shifted around 2022, when researchers started asking harder questions about governance, trust calibration, and cross-system fairness. What is still missing, however, is a practical framework that ties trust metrics back to operational benchmarks in a way that deployment teams can act on - and that is exactly the gap this pipeline addresses.
   </p>
 </section>
 
 <section id="methodology">
-  <h2>Methodology</h2>
+  <h2>3. Methodology</h2>
+
+  <h3>3.1 CRISP-DM Framework (Phased Detail)</h3>
+  <p>
+    The methodology follows CRISP-DM, the most widely used framework for data mining projects. It was chosen because its cyclical phases align naturally with Medallion architecture layers.
+  </p>
+  <img class="workflow-img" src="report_images/crisp_dm_workflow.png" alt="CRISP-DM Cyclic Workflow">
+  <div class="img-caption">Figure 3.5 — CRISP-DM Cyclic Workflow mapped to Medallion Architecture layers</div>
 
   <h3>Medallion Architecture</h3>
   <p>
@@ -160,8 +203,25 @@
   </p>
 </section>
 
+<section id="system-design">
+  <h2>4. System Design & Use Cases</h2>
+  
+  <h3>4.1 Use Case & Actor Interactions</h3>
+  <p>
+    Understanding who uses the pipeline and how they interact with its components is essential for scoping the architecture.
+  </p>
+  <img class="workflow-img" src="report_images/use_case_overview.png" alt="Use Case Overview">
+  <div class="img-caption">Figure 4.5 — Use Case Diagram: System components and actor interactions</div>
+
+  <p>
+    The workflow flows from data processing (System Actor) down to the Data Analyst who queries findings, and finally the Decision Maker who acts upon them.
+  </p>
+  <img class="workflow-img" src="report_images/use_case_workflow.png" alt="Use Case Workflow">
+  <div class="img-caption">Figure 4.6 — Use Case Workflow: Data Analyst prepares insights, Decision Maker acts on findings</div>
+</section>
+
 <section id="results">
-  <h2>Results</h2>
+  <h2>5. Results</h2>
 
   <h3>Key Metrics</h3>
   <div class="kpi-row" id="kpiRow"></div>
@@ -218,6 +278,11 @@
     The original benchmark keys used underscores (<code>Financial_Services</code>) while the main dataset used spaces (<code>Financial Services</code>). This mismatch caused 1,047 records (19%) to lose benchmark context. The fix—<code>regexp_replace(col('Industry'), '_', ' ')</code> before joining—restored full coverage and changed the Trust Gap narrative: Financial Services and Professional Services shifted from NULL to −11.39 and −5.63 respectively.
   </p>
 
+  <h3>Reflective Insight on Performance</h3>
+  <p>
+    One honest admission: the 59.3% accuracy figure was initially disappointing. I had expected something closer to 70% given how clean the dataset looked. But digging into the confusion matrix - particularly the confusion around the Medium class - taught me that good data engineering does not automatically produce good predictions. The real value of this pipeline is not the model's ability to guess productivity category from telemetry alone; it is the trust gap analysis and cluster segmentation, which tell a richer story about where AI agents thrive and where they struggle.
+  </p>
+
   <h3>Cluster Interpretation</h3>
   <p>
     High Performers (2,361 deployments) achieve 25.4% average productivity improvement with 76.4% success rate and 61.2 trust score. Low Performers (1,825) show 7.3% productivity, 70.9% success, and 53.9 trust. The 18-point productivity spread validates the clustering. Average Performers (1,314) sit in the middle but exhibit higher variance in trust scores.
@@ -237,7 +302,10 @@
 <section id="conclusion">
   <h2>Conclusion</h2>
   <p>
-    The pipeline demonstrates a reproducible, scalable approach to agentic AI performance evaluation. The Medallion architecture ensures data quality and auditability; the star schema enables fast analytical queries; the ML components provide both descriptive (clustering) and predictive (classification) insight. The trust gap metric offers a practical KPI for AI governance teams.
+    At a broader level, this project has been a lesson in the gap between textbook data engineering and real-world messiness. The underscore-vs-space issue that silently dropped 19% of benchmark joins is the kind of bug that would never appear in a tutorial but can quietly break an entire analysis. Fixing it - and catching similar issues - is exactly what makes this pipeline more than just a collection of Spark transformations.
+  </p>
+  <p>
+    What I hope this pipeline demonstrates is that good evaluation does not need a sophisticated model. A K-Means with silhouette 0.522 and a Logistic Regression at 59.3% accuracy are far from state-of-the-art, but they are enough to surface actionable insights - like where trust is breaking down or which sectors are ready for production deployment. The star schema and dashboard then make those insights accessible to people who do not write code.
   </p>
 
   <h3>Recommendations</h3>
