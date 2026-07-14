@@ -1,0 +1,41 @@
+# Star Schema & Data Lakehouse Overview
+## 1. Raw Data Schema (Parquet - Bronze Layer)
+  Dataset                           | Rows | Columns
+  ----------------------------------|------|--------
+  AgenticAI_Leadership_Dataset_v1   | 5500 | 16
+  agent_execution_logs              | 5500 |  6
+  openalex_ai_leadership_papers     |   25 |  6
+  external_leadership_benchmarks    |   11 |  4
+
+## 2. Clean Data Schema (Parquet - Silver Layer)
+  Table                | Rows | Columns | Key Transformations
+  ---------------------|------|---------|------------------------------------------------
+  agentic_leadership_silver | 5500|    26   | Industry normalization, median imputation,
+                                             openalex keyword citation mapping
+
+## 3. Gold Star Schema (Parquet - Dimensional Mart)
+
+  +--------------------------+
+  |  DIMENSION TABLE         |
+  |  industry_ai_summary     |
+  |  (11 rows, 6 columns)    |
+  +--------------------------+
+           |
+           | Join on Industry
+           |
+  +----------------------------+
+  |  FACT TABLE                |
+  |  ai_enriched_agentic_leadership  |
+  |  (5500 rows, 31 columns)   |
+  +----------------------------+
+
+  Key Metrics in Fact Table:
+  - Task_Success_Rate, Productivity_Improvement_Percent
+  - Leadership_Trust_Score
+  - Benchmark_Trust_Score
+  - Context_Awareness_Score, Response_Time_Seconds
+  - AI_Performance_Label (from K-Means)
+  - Trust_Gap (Agent Score - Benchmark Score)
+
+  Dimension Table (industry_ai_summary) columns:
+  - Industry, Avg_Success_Rate, Avg_Productivity, Avg_Trust, Citation_Avg, Trust_Gap

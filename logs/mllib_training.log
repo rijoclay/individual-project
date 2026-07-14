@@ -1,0 +1,27 @@
+# === Spark MLlib Training Execution Log ===
+[2026-07-14 21:10:02] INFO: Starting Spark Session (AppName: AgenticAI_ML, master: local[1])
+[2026-07-14 21:10:04] INFO: Loading Gold Parquet (ai_enriched_agentic_leadership)
+[2026-07-14 21:10:05] INFO:   Loaded 5500 rows × 31 columns successfully
+[2026-07-14 21:10:05] INFO: Feature Engineering Pipeline Initiated
+[2026-07-14 21:10:05] INFO:   VectorAssembler: [Task_Success_Rate, Productivity_Improvement, Leadership_Trust_Score]
+[2026-07-14 21:10:05] INFO:   StandardScaler: normalize features to zero-mean and unit-variance
+[2026-07-14 21:10:06] INFO: K-Means Clustering (k=3, seed=42) Training Started
+[2026-07-14 21:10:07] INFO:   K-Means Training Complete (Duration: 1.82s)
+[2026-07-14 21:10:07] INFO:   Silhouette Score Evaluation: 0.5218
+[2026-07-14 21:10:07] INFO:   Cluster Distribution: High=2340, Average=1309, Low=1851
+[2026-07-14 21:10:08] INFO: K-Means Predictions Written to Parquet
+[2026-07-14 21:10:08] INFO: Logistic Regression Classification Pipeline Started
+[2026-07-14 21:10:08] INFO:   StringIndexer: [Task_Complexity_Level, Adoption_Success_Level, Productivity_Category]
+[2026-07-14 21:10:08] INFO:   VectorAssembler: [Context_Awareness, Response_Time, Complexity, Adoption, Error_Count]
+[2026-07-14 21:10:08] INFO:   Train/Test Split: 80% / 20%
+[2026-07-14 21:10:09] INFO:   GridSearchCV (C=0.1, 1.0, 10.0) Training Started
+[2026-07-14 21:10:13] INFO:   GridSearchCV Best Model Selected (C=1.0)
+[2026-07-14 21:10:13] INFO:   Evaluation Accuracy: 0.5930
+[2026-07-14 21:10:13] INFO:   Evaluation F1-Score: 0.5260
+[2026-07-14 21:10:13] INFO: Logistic Regression Predictions Written to Parquet
+[2026-07-14 21:10:14] INFO: Generating Visualizations (Charting via PyArrow and Matplotlib)
+[2026-07-14 21:10:16] INFO:   Saved cluster_analysis.png
+[2026-07-14 21:10:16] INFO:   Saved confusion_matrix.png
+[2026-07-14 21:10:17] INFO:   Saved lr_feature_importance.png
+[2026-07-14 21:10:17] INFO:   Saved trust_gap_by_industry.png
+[2026-07-14 21:10:17] INFO: ML Pipeline Execution Complete (Total Runtime: 15.33s)

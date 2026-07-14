@@ -1,0 +1,19 @@
+# === PySpark ETL Pipeline Execution Log ===
+[2026-07-14 21:03:41] INFO: Starting Spark Session (AppName: AgenticAI_Pipeline, master: local[1])
+[2026-07-14 21:03:43] INFO: Ingesting Raw Data Sources (Bronze Layer Ingestion)
+[2026-07-14 21:03:43] INFO:   Loaded AgenticAI_Leadership_Dataset_v1.csv (5500 rows)
+[2026-07-14 21:03:44] INFO:   Loaded agent_execution_logs.csv (5500 rows)
+[2026-07-14 21:03:44] INFO:   Loaded openalex_ai_leadership_papers.json (25 rows)
+[2026-07-14 21:03:44] INFO:   Loaded external_leadership_benchmarks.json (11 rows)
+[2026-07-14 21:03:44] INFO: Bronze Layer Ingestion Complete (Duration: 1.45s)
+[2026-07-14 21:03:45] INFO: Cleaning and Enriched Data Processing (Silver Layer Transformation)
+[2026-07-14 21:03:45] INFO:   Applying industry name regex normalization
+[2026-07-14 21:03:46] INFO:   Imputing missing telemetry values using sector-specific medians
+[2026-07-14 21:03:46] INFO:   Mapping OpenAlex citations by keyword matching
+[2026-07-14 21:03:46] INFO: Silver Layer Transformation Complete (Duration: 1.88s)
+[2026-07-14 21:03:47] INFO: Building Dimensional Star Schema (Gold Layer Processing)
+[2026-07-14 21:03:47] INFO:   Creating Fact Table: ai_enriched_agentic_leadership
+[2026-07-14 21:03:47] INFO:   Creating Dimension Table: industry_ai_summary
+[2026-07-14 21:03:48] INFO:   Verifying schema integration: 0 null records detected
+[2026-07-14 21:03:48] INFO: Gold Layer Dimensional Mart Written to Parquet (Duration: 1.12s)
+[2026-07-14 21:03:48] INFO: Pipeline Complete (Total Runtime: 4.45s)
