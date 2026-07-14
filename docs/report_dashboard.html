@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agentic AI Performance Evaluation Pipeline — Individual Project Report</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --text: #1a1a1a;
+    --text-muted: #4a4a4a;
+    --border: #d0d0d0;
+    --bg: #fafafa;
+    --card: #ffffff;
+    --accent: #2c5f7c;
+    --accent-light: #e8f0f5;
+    --positive: #2d7d46;
+    --negative: #a83232;
+    --muted-positive: #d4edda;
+    --muted-negative: #f8d7da;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --text: #e8e8e8;
+      --text-muted: #a0a0a0;
+      --border: #3a3a3a;
+      --bg: #121212;
+      --card: #1e1e1e;
+      --accent: #7db9e8;
+      --accent-light: #1a3a4e;
+      --positive: #6ec66e;
+      --negative: #e57373;
+      --muted-positive: #1e4d2b;
+      --muted-negative: #5c1a1a;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    line-height: 1.7;
+    color: var(--text);
+    background: var(--bg);
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+  @media (max-width: 768px) { body { padding: 24px 16px 60px; } }
+
+  /* Typography */
+  h1, h2, h3 { font-family: system-ui, -apple-system, sans-serif; font-weight: 600; line-height: 1.3; color: var(--text); }
+  h1 { font-size: 2.2rem; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
+  h2 { font-size: 1.5rem; margin: 3rem 0 1rem; padding-bottom: 0.4rem; border-bottom: 2px solid var(--accent); }
+  h3 { font-size: 1.15rem; margin: 2rem 0 0.75rem; color: var(--text-muted); }
+  p { margin-bottom: 1rem; text-align: justify; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  ul, ol { margin: 1rem 0 1rem 1.5rem; }
+  li { margin-bottom: 0.4rem; }
+  code { font-family: 'Monaco', 'Consolas', monospace; font-size: 0.9em; background: var(--accent-light); padding: 0.15em 0.4em; border-radius: 3px; }
+  pre { background: #1e1e1e; color: #d4d4d4; padding: 1rem; border-radius: 6px; overflow-x: auto; margin: 1rem 0; font-size: 0.85rem; line-height: 1.5; }
+  pre code { background: none; padding: 0; color: inherit; }
+
+  /* Meta */
+  .meta { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2rem; line-height: 1.8; }
+  .meta span { display: block; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+
+  /* Cards for charts */
+  .chart-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .chart-card h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .chart-wrapper { position: relative; height: 320px; }
+  .chart-wrapper.small { height: 220px; }
+  .chart-wrapper.tall { height: 400px; }
+
+  /* KPI row */
+  .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+  .kpi {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem 1rem;
+    text-align: center;
+  }
+  .kpi .val { font-size: 2rem; font-weight: 700; color: var(--text); line-height: 1.2; }
+  .kpi .lbl { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 0.25rem; }
+
+  /* Tables */
+  .table-wrap { overflow-x: auto; margin: 1rem 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th, td { padding: 0.5rem 0.75rem; text-align: left; border-bottom: 1px solid var(--border); }
+  th { background: var(--accent-light); color: var(--accent); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.3px; }
+  tr:hover td { background: var(--accent-light); }
+  .pos { color: var(--positive); font-weight: 600; }
+  .neg { color: var(--negative); font-weight: 600; }
+
+  /* Badge */
+  .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 999px; font-size: 0.7rem; font-weight: 600; text-transform: capitalize; }
+  .badge-high { background: var(--muted-positive); color: var(--positive); }
+  .badge-avg { background: #fff3cd; color: #856404; }
+  .badge-low { background: var(--muted-negative); color: var(--negative); }
+
+  /* Footer */
+  footer { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.85rem; text-align: center; }
+
+  /* Print */
+  @media print {
+    body { max-width: none; padding: 0; }
+    .chart-card { break-inside: avoid; page-break-inside: avoid; }
+    h2 { break-after: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Agentic AI Performance Evaluation Pipeline</h1>
+  <div class="meta">
+    <span><strong>Course:</strong> SECP3843-01 — Special Topics in Computer Science</span>
+    <span><strong>Student:</strong> Richard Clay (A23CS0342)</span>
+    <span><strong>Supervisor:</strong> Dr. Aryati</span>
+    <span><strong>Institution:</strong> BINUS University / UTM</span>
+  </div>
+</header>
+
+<hr>
+
+<section id="abstract">
+  <h2>Abstract</h2>
+  <p>
+    This project presents an end-to-end data engineering and machine learning pipeline for evaluating agentic AI leadership performance across eleven industry sectors. Built on a PySpark Medallion architecture (Bronze–Silver–Gold), the pipeline ingests 5,500 deployment records from Kaggle, execution telemetry logs, external industry benchmarks, and 25 OpenAlex research papers. The Silver layer applies median imputation per industry, normalizes benchmark keys (fixing a 19% join loss), and enriches records with NLP-derived sector citations. The Gold layer produces a star schema: an industry summary dimension (11 rows) and an enriched fact table (5,500 rows). Unsupervised K-Means clustering (silhouette 0.522) identifies three performance tiers—High, Average, and Low Performer—while multinomial Logistic Regression predicts productivity category from system telemetry alone (59.3% accuracy, 52.6% macro F1). A cross-industry trust gap analysis reveals that only Government agencies exhibit trust exceeding benchmarks (+3.92), whereas Technology (−16.23), Financial Services (−11.39), and Logistics (−11.30) show substantial deficits. The pipeline executes in ~53 seconds on constrained hardware (1 GB driver memory).
+  </p>
+</section>
+
+<section id="methodology">
+  <h2>Methodology</h2>
+
+  <h3>Medallion Architecture</h3>
+  <p>
+    The pipeline follows the Bronze → Silver → Gold pattern. <strong>Bronze</strong> captures raw ingestion with lineage columns (<code>ingestion_date</code>, <code>data_source</code>). <strong>Silver</strong> standardizes categoricals to lowercase, casts numerics, imputes missing values using per-industry medians (avoiding global mean bias), joins normalized benchmarks (<code>regexp_replace(Industry, '_', ' ')</code>), merges execution logs, and maps OpenAlex paper titles to five sectors via keyword regex. Derived columns include <code>Productivity_Category</code> (low/medium/high) and <code>Trust_vs_Benchmark_Gap</code>. <strong>Gold</strong> exports two marts: <code>industry_ai_summary</code> (dimension) and <code>ai_enriched_agentic_leadership</code> (fact).
+  </p>
+
+  <h3>Machine Learning</h3>
+  <p>
+    <strong>K-Means</strong> uses three features—Task Success Rate, Productivity Improvement, Leadership Trust Score—scaled with <code>StandardScaler</code>. <strong>k=3</strong> was selected via elbow method (silhouette: k=2 0.54, k=3 0.52, k=4 0.52). Clusters are labeled by productivity centroid: High (25.4%), Average (14.1%), Low (7.3%). <strong>Logistic Regression</strong> predicts <code>Productivity_Category</code> from five system telemetry features only (Context Awareness, Response Time, Task Complexity Level, Adoption Success Level, Error Count)—no outcome leakage. GridSearchCV (3-fold) selects <code>C=10</code>. Multinomial loss with 200 iterations.
+  </p>
+</section>
+
+<section id="results">
+  <h2>Results</h2>
+
+  <h3>Key Metrics</h3>
+  <div class="kpi-row" id="kpiRow"></div>
+
+  <h3>Cluster Distribution & Centroids</h3>
+  <div class="chart-card">
+    <h3>K-Means Cluster Distribution</h3>
+    <div class="chart-wrapper"><canvas id="clusterChart"></canvas></div>
+  </div>
+
+  <h3>Logistic Regression Performance</h3>
+  <div class="chart-card">
+    <h3>Multiclass Classification Metrics</h3>
+    <div class="chart-wrapper small"><canvas id="lrChart"></canvas></div>
+  </div>
+
+  <h3>Trust vs Productivity by Industry</h3>
+  <p>
+    Each point represents a deployment. Colors denote industry. The spread shows that higher trust scores do not uniformly translate to higher productivity gains—cluster assignment captures the interaction better than either metric alone.
+  </p>
+  <div class="chart-card">
+    <h3>Trust vs Productivity Scatter (Sample)</h3>
+    <div class="chart-wrapper tall"><canvas id="scatterChart"></canvas></div>
+  </div>
+
+  <h3>Industry Summary</h3>
+  <div class="chart-card">
+    <h3>Aggregated Metrics per Industry</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Industry</th><th>Deployments</th><th>Avg Success Rate</th><th>Avg Productivity %</th><th>Trust Gap</th></tr>
+        </thead>
+        <tbody id="indTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <h3>Trust Gap Analysis</h3>
+  <p>
+    Trust Gap = Internal Trust Score − Industry Benchmark. Positive values indicate organizations trust their agents <em>more</em> than the industry norm; negative values reveal a trust deficit. Only Government (+3.92) is positive. Technology (−16.23) has the deepest gap, followed by Financial Services (−11.39) and Logistics (−11.30).
+  </p>
+  <div class="chart-card">
+    <h3>Trust Gap by Industry (Agent − Benchmark)</h3>
+    <div class="chart-wrapper"><canvas id="trustChart"></canvas></div>
+  </div>
+</section>
+
+<section id="discussion">
+  <h2>Discussion</h2>
+
+  <h3>Benchmark Join Fix</h3>
+  <p>
+    The original benchmark keys used underscores (<code>Financial_Services</code>) while the main dataset used spaces (<code>Financial Services</code>). This mismatch caused 1,047 records (19%) to lose benchmark context. The fix—<code>regexp_replace(col('Industry'), '_', ' ')</code> before joining—restored full coverage and changed the Trust Gap narrative: Financial Services and Professional Services shifted from NULL to −11.39 and −5.63 respectively.
+  </p>
+
+  <h3>Cluster Interpretation</h3>
+  <p>
+    High Performers (2,361 deployments) achieve 25.4% average productivity improvement with 76.4% success rate and 61.2 trust score. Low Performers (1,825) show 7.3% productivity, 70.9% success, and 53.9 trust. The 18-point productivity spread validates the clustering. Average Performers (1,314) sit in the middle but exhibit higher variance in trust scores.
+  </p>
+
+  <h3>Classification Limitations</h3>
+  <p>
+    Accuracy of 59.3% exceeds the 33% random baseline for three classes, but the Medium class remains difficult (F1 0.39) due to overlap with both High and Low in feature space. Using only system telemetry avoids leakage but sacrifices predictive power from outcome variables. Adding contextual features (industry, agent type) would improve accuracy but reduce the model's utility as a leading indicator.
+  </p>
+
+  <h3>Industry Effectiveness</h3>
+  <p>
+    An effectiveness score combining trust gap, productivity, and success rate ranks Government (52.84) and Education (52.76) highest, while Technology ranks lowest (50.34) despite high deployment volume. This suggests sectors with stronger regulatory frameworks achieve better trust alignment.
+  </p>
+</section>
+
+<section id="conclusion">
+  <h2>Conclusion</h2>
+  <p>
+    The pipeline demonstrates a reproducible, scalable approach to agentic AI performance evaluation. The Medallion architecture ensures data quality and auditability; the star schema enables fast analytical queries; the ML components provide both descriptive (clustering) and predictive (classification) insight. The trust gap metric offers a practical KPI for AI governance teams.
+  </p>
+
+  <h3>Recommendations</h3>
+  <ol>
+    <li><strong>Institutionalize human-in-the-loop audits</strong> for sectors with negative trust gaps (Technology, Financial Services, Logistics).</li>
+    <li><strong>Normalize benchmark keys upstream</strong> to prevent silent join failures.</li>
+    <li><strong>Prioritize feature engineering over model complexity</strong>—the current telemetry-only model is interpretable and deployable as a real-time monitor.</li>
+    <li><strong>Extend the pipeline</strong> with temporal drift detection and A/B testing hooks for agent version comparison.</li>
+  </ol>
+</section>
+
+<footer>
+  Generated from <code>individual_project_pipeline.ipynb</code> + <code>individual_project_classification.ipynb</code> · Data: 5,500 records · Runtime: ~53s · Richard Clay A23CS0342
+</footer>
+
+<script>
+// ============================================================
+// EMBEDDED DATA (inlined from data.json)
+// ============================================================
+const DATA = {
+  "industry_summary": [
+    {"Industry":"Education","Avg_Success_Rate":74.8,"Avg_Productivity":13.39,"Research_Citation_Avg":885.11,"Trust_Gap":-3.3,"Deployments":426},
+    {"Industry":"Government","Avg_Success_Rate":74.21,"Avg_Productivity":13.04,"Research_Citation_Avg":3691.0,"Trust_Gap":3.92,"Deployments":324},
+    {"Industry":"Financial Services","Avg_Success_Rate":74.3,"Avg_Productivity":12.99,"Research_Citation_Avg":752.0,"Trust_Gap":-11.39,"Deployments":720},
+    {"Industry":"Manufacturing","Avg_Success_Rate":74.11,"Avg_Productivity":12.95,"Research_Citation_Avg":0.0,"Trust_Gap":-9.23,"Deployments":522},
+    {"Industry":"Healthcare","Avg_Success_Rate":74.21,"Avg_Productivity":12.86,"Research_Citation_Avg":0.0,"Trust_Gap":-4.41,"Deployments":662},
+    {"Industry":"Technology","Avg_Success_Rate":73.26,"Avg_Productivity":12.57,"Research_Citation_Avg":842.33,"Trust_Gap":-16.23,"Deployments":847},
+    {"Industry":"Telecommunications","Avg_Success_Rate":73.42,"Avg_Productivity":12.56,"Research_Citation_Avg":0.0,"Trust_Gap":-7.35,"Deployments":384},
+    {"Industry":"Retail","Avg_Success_Rate":73.1,"Avg_Productivity":12.51,"Research_Citation_Avg":0.0,"Trust_Gap":-4.65,"Deployments":557},
+    {"Industry":"Energy","Avg_Success_Rate":73.52,"Avg_Productivity":12.48,"Research_Citation_Avg":0.0,"Trust_Gap":-7.23,"Deployments":320},
+    {"Industry":"Logistics","Avg_Success_Rate":72.96,"Avg_Productivity":12.38,"Research_Citation_Avg":0.0,"Trust_Gap":-11.3,"Deployments":411},
+    {"Industry":"Professional Services","Avg_Success_Rate":72.97,"Avg_Productivity":12.36,"Research_Citation_Avg":0.0,"Trust_Gap":-5.63,"Deployments":327}
+  ],
+  "cluster_distribution": [
+    {"AI_Performance_Label":"High Performer","count":2361},
+    {"AI_Performance_Label":"Low Performer","count":1825},
+    {"AI_Performance_Label":"Average Performer","count":1314}
+  ],
+  "trust_gap": [
+    {"Industry":"Technology","Avg_Trust":61.77213695395508,"Avg_Benchmark":78.0,"Gap":-16.227863046044916,"N":847},
+    {"Industry":"Financial Services","Avg_Trust":63.60916666666669,"Avg_Benchmark":75.0,"Gap":-11.390833333333312,"N":720},
+    {"Industry":"Logistics","Avg_Trust":60.69537712895377,"Avg_Benchmark":72.0,"Gap":-11.304622871046227,"N":411},
+    {"Industry":"Manufacturing","Avg_Trust":61.767241379310356,"Avg_Benchmark":71.0,"Gap":-9.232758620689644,"N":522},
+    {"Industry":"Telecommunications","Avg_Trust":61.648177083333316,"Avg_Benchmark":69.0,"Gap":-7.351822916666684,"N":384},
+    {"Industry":"Energy","Avg_Trust":62.765312500000036,"Avg_Benchmark":70.0,"Gap":-7.234687499999964,"N":320},
+    {"Industry":"Professional Services","Avg_Trust":61.36666666666674,"Avg_Benchmark":67.0,"Gap":-5.633333333333262,"N":327},
+    {"Industry":"Retail","Avg_Trust":61.352423698384165,"Avg_Benchmark":66.0,"Gap":-4.647576301615835,"N":557},
+    {"Industry":"Healthcare","Avg_Trust":63.58791540785495,"Avg_Benchmark":68.0,"Gap":-4.4120845921450496,"N":662},
+    {"Industry":"Education","Avg_Trust":61.70492957746478,"Avg_Benchmark":65.0,"Gap":-3.2950704225352183,"N":426},
+    {"Industry":"Government","Avg_Trust":63.92037037037035,"Avg_Benchmark":60.0,"Gap":3.9203703703703496,"N":324}
+  ],
+  "model_metrics": {
+    "kmeans_silhouette": 0.5218,
+    "lr_accuracy": 0.593,
+    "lr_f1": 0.526,
+    "lr_precision": 0.4034,
+    "lr_recall": 0.5544,
+    "total_time_sec": 53.3,
+    "bronze_time": 9.6,
+    "silver_time": 9.2,
+    "gold_time": 34.5,
+    "records": 5500
+  },
+  "scatter_sample": [
+    {"Record_ID":"AAI-00058","Industry":"Technology","AI_Performance_Label":"High Performer","Task_Success_Rate":77.9,"Productivity_Improvement_Percent":17.4,"Leadership_Trust_Score":67.2,"Response_Time_Seconds":5.35},
+    {"Record_ID":"AAI-00119","Industry":"Technology","AI_Performance_Label":"Low Performer","Task_Success_Rate":69.6,"Productivity_Improvement_Percent":12.4,"Leadership_Trust_Score":69.5,"Response_Time_Seconds":7.04},
+    {"Record_ID":"AAI-00138","Industry":"Technology","AI_Performance_Label":"Low Performer","Task_Success_Rate":63.5,"Productivity_Improvement_Percent":11.3,"Leadership_Trust_Score":61.0,"Response_Time_Seconds":7.94},
+    {"Record_ID":"AAI-00318","Industry":"Technology","AI_Performance_Label":"Low Performer","Task_Success_Rate":64.1,"Productivity_Improvement_Percent":7.6,"Leadership_Trust_Score":58.2,"Response_Time_Seconds":7.52},
+    {"Record_ID":"AAI-00355","Industry":"Technology","AI_Performance_Label":"Low Performer","Task_Success_Rate":64.2,"Productivity_Improvement_Percent":5.9,"Leadership_Trust_Score":69.1,"Response_Time_Seconds":13.97},
+    {"Record_ID":"AAI-00367","Industry":"Technology","AI_Performance_Label":"Low Performer","Task_Success_Rate":43.0,"Productivity_Improvement_Percent":1.5,"Leadership_Trust_Score":63.1,"Response_Time_Seconds":6.85},
+    {"Record_ID":"AAI-00396","Industry":"Technology","AI_Performance_Label":"Low Performer","Task_Success_Rate":72.5,"Productivity_Improvement_Percent":11.1,"Leadership_Trust_Score":66.9,"Response_Time_Seconds":3.83},
+    {"Record_ID":"AAI-00458","Industry":"Technology","AI_Performance_Label":"High Performer","Task_Success_Rate":88.3,"Productivity_Improvement_Percent":23.8,"Leadership_Trust_Score":64.3,"Response_Time_Seconds":9.81},
+    {"Record_ID":"AAI-00525","Industry":"Technology","AI_Performance_Label":"High Performer","Task_Success_Rate":77.0,"Productivity_Improvement_Percent":13.9,"Leadership_Trust_Score":66.3,"Response_Time_Seconds":7.31},
+    {"Record_ID":"AAI-00585","Industry":"Technology","AI_Performance_Label":"Low Performer","Task_Success_Rate":67.3,"Productivity_Improvement_Percent":8.1,"Leadership_Trust_Score":71.5,"Response_Time_Seconds":6.17},
+    {"Record_ID":"AAI-00605","Industry":"Technology","AI_Performance_Label":"Average Performer","Task_Success_Rate":72.9,"Productivity_Improvement_Percent":15.1,"Leadership_Trust_Score":43.3,"Response_Time_Seconds":8.13},
+    {"Record_ID":"AAI-00693","Industry":"Technology","AI_Performance_Label":"Average Performer","Task_Success_Rate":65.4,"Productivity_Improvement_Percent":7.3,"Leadership_Trust_Score":35.5,"Response_Time_Seconds":10.76},
+    {"Record_ID":"AAI-00706","Industry":"Technology","AI_Performance_Label":"Average Performer","Task_Success_Rate":68.8,"Productivity_Improvement_Percent":16.1,"Leadership_Trust_Score":47.9,"Response_Time_Seconds":11.19},
+    {"Record_ID":"AAI-00720","Industry":"Technology","AI_Performance_Label":"Low Performer","Task_Success_Rate":75.4,"Productivity_Improvement_Percent":12.0,"Leadership_Trust_Score":73.8,"Response_Time_Seconds":6.71},
+    {"Record_ID":"AAI-00744","Industry":"Technology","AI_Performance_Label":"Low Performer","Task_Success_Rate":58.6,"Productivity_Improvement_Percent":7.2,"Leadership_Trust_Score":65.4,"Response_Time_Seconds":9.69}
+  ]
+};
+
+// Color palette for industries
+const PALETTE = [
+  '#2d7d46', '#7db9e8', '#a83232', '#e8a838', '#5a9bd8',
+  '#3a8c6e', '#c45a5a', '#8b7d3a', '#6b5b8c', '#7a8c5a', '#4a8c8c'
+];
+const IND_COLOR = {};
+DATA.industry_summary.forEach((d,i)=>IND_COLOR[d.Industry]=PALETTE[i%PALETTE.length]);
+const CLUSTER_COLOR = {'High Performer':'#2d7d46','Average Performer':'#e8a838','Low Performer':'#a83232'};
+
+// Chart defaults
+Chart.defaults.color = getComputedStyle(document.documentElement).getPropertyValue('--text-muted').trim() || '#4a4a4a';
+Chart.defaults.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--border').trim() || '#d0d0d0';
+Chart.defaults.font.family = 'system-ui, -apple-system, sans-serif';
+
+// ============================================================
+// RENDER
+// ============================================================
+
+// KPI Row
+const m = DATA.model_metrics;
+document.getElementById('kpiRow').innerHTML = `
+  <div class="kpi"><div class="val">${m.records.toLocaleString()}</div><div class="lbl">Records Processed</div></div>
+  <div class="kpi"><div class="val">${(m.kmeans_silhouette*100).toFixed(1)}%</div><div class="lbl">K-Means Silhouette</div></div>
+  <div class="kpi"><div class="val">${(m.lr_accuracy*100).toFixed(1)}%</div><div class="lbl">LR Accuracy</div></div>
+  <div class="kpi"><div class="val">${m.total_time_sec.toFixed(0)}s</div><div class="lbl">Total Pipeline Time</div></div>
+`;
+
+// 1. Cluster Distribution (Doughnut)
+new Chart(document.getElementById('clusterChart'), {
+  type: 'doughnut',
+  data: {
+    labels: DATA.cluster_distribution.map(c => `${c.AI_Performance_Label} (${c.count})`),
+    datasets: [{
+      data: DATA.cluster_distribution.map(c => c.count),
+      backgroundColor: DATA.cluster_distribution.map(c => CLUSTER_COLOR[c.AI_Performance_Label]),
+      borderWidth: 0
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 16, font: { size: 11 } } } },
+    cutout: '60%'
+  }
+});
+
+// 2. LR Metrics (Horizontal Bar)
+new Chart(document.getElementById('lrChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Accuracy', 'F1 Score', 'Precision', 'Recall'],
+    datasets: [{
+      data: [m.lr_accuracy, m.lr_f1, m.lr_precision, m.lr_recall],
+      backgroundColor: ['#2d7d46', '#e8a838', '#7db9e8', '#a83232'],
+      borderRadius: 4
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { x: { min: 0, max: 1, ticks: { callback: v => (v*100).toFixed(0)+'%' } } }
+  }
+});
+
+// 3. Scatter Trust vs Productivity
+const sc = DATA.scatter_sample;
+const indOrder = DATA.industry_summary.map(d=>d.Industry);
+const scatterDatasets = indOrder.map(ind => ({
+  label: ind,
+  data: sc.filter(p => p.Industry===ind).map(p => ({ x: p.Leadership_Trust_Score, y: p.Productivity_Improvement_Percent })),
+  backgroundColor: IND_COLOR[ind] + 'CC',
+  borderColor: IND_COLOR[ind],
+  borderWidth: 1,
+  pointRadius: 5,
+  pointHoverRadius: 7
+}));
+new Chart(document.getElementById('scatterChart'), {
+  type: 'scatter',
+  data: { datasets: scatterDatasets },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: trust ${ctx.parsed.x.toFixed(1)}, prod ${ctx.parsed.y.toFixed(1)}%` } },
+      legend: { position: 'right', labels: { boxWidth: 10, font: { size: 10 } } }
+    },
+    scales: {
+      x: { title: { display: true, text: 'Leadership Trust Score' }, min: 30, max: 90 },
+      y: { title: { display: true, text: 'Productivity Improvement %' }, min: 0, max: 30 }
+    }
+  }
+});
+
+// 4. Industry Table
+const tb = document.getElementById('indTable');
+DATA.industry_summary.forEach(r => {
+  const gap = r.Trust_Gap;
+  const gapCls = gap===null?'':gap<0?'neg':'pos';
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${r.Industry}</td><td>${r.Deployments}</td><td>${r.Avg_Success_Rate}</td><td>${r.Avg_Productivity}</td><td class="${gapCls}">${gap===null?'N/A':gap.toFixed(2)}</td>`;
+  tb.appendChild(tr);
+});
+
+// 5. Trust Gap Chart (Horizontal Bar)
+const tg = DATA.trust_gap.filter(r => r.Gap!==null);
+new Chart(document.getElementById('trustChart'), {
+  type: 'bar',
+  data: {
+    labels: tg.map(r => r.Industry),
+    datasets: [{
+      data: tg.map(r => r.Gap),
+      backgroundColor: tg.map(r => (r.Gap<0 ? '#a8323266' : '#2d7d4666')),
+      borderColor: tg.map(r => (r.Gap<0 ? '#a83232' : '#2d7d46')),
+      borderWidth: 1,
+      borderRadius: 4
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => {
+            const r = tg[ctx.dataIndex];
+            return [`Trust: ${r.Avg_Trust.toFixed(1)}`, `Benchmark: ${r.Avg_Benchmark.toFixed(1)}`, `Gap: ${r.Gap.toFixed(2)}`].join(' | ');
+          }
+        }
+      }
+    },
+    scales: {
+      x: { title: { display: true, text: 'Trust Gap (Agent — Benchmark)' } }
+    }
+  }
+});
+
+</script>
+</body>
+</html>

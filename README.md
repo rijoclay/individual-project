@@ -1,74 +1,88 @@
-# Data Engineering Individual Project
+# Agentic AI Performance Evaluation Pipeline
 
-A Data Engineering project proposal outlining an end-to-end analytics pipeline using PySpark medallion architecture (Bronze → Silver → Gold).
+Individual Project 2 (SECP3843-01) — Richard Clay (A23CS0342)
+Supervisor: Dr. Aryati Binti Bakri
 
-## Overview
-
-This repository contains the proposal phase of the project. The planned data pipeline will ingest multi-source data, clean and enrich it, and ultimately generate analytics-ready outputs.
+End-to-end analytics + machine learning pipeline built with **PySpark Medallion
+Architecture** (Bronze → Silver → Gold). The full pipeline including K-Means
+clustering and Logistic Regression classification runs in a single self-contained
+notebook — no external modules required.
 
 ## Project Structure
 
 ```
-├── data/                            Sample & raw datasets (for proposal context)
-│   ├── AgenticAI_Leadership_Dataset_v1.csv
-│   ├── agent_execution_logs.csv
-│   ├── external_leadership_benchmarks.json
-│   └── openalex_ai_leadership_papers.json
+├── data/                                   Raw multi-source datasets
+│   ├── AgenticAI_Leadership_Dataset_v1.csv  Main leadership dataset
+│   ├── agent_execution_logs.csv             Agent execution logs
+│   ├── external_leadership_benchmarks.json  External benchmark data
+│   └── openalex_ai_leadership_papers.json   Academic paper references
 │
-├── src/                             Planned PySpark pipeline structure
-│   ├── bronze_layer.py              Raw → Cleaned data
-│   ├── silver_layer.py              Cleaned → Enriched data
-│   ├── gold_layer.py                Enriched → Analytics-ready data
-│   ├── run_spark_pipeline.py        Pipeline runner
-│   └── test_pipeline.py             Pipeline tests
-│
-├── reference/                       Proposed Architecture & Timelines
-│   ├── architecture_diagram.html    Proposed full system architecture
-│   ├── etl_architecture.png         Proposed ETL flow diagram
-│   └── gantt_chart.png              Proposed project timeline
+├── individual_project_pipeline.ipynb        SINGLE-FILE end-to-end pipeline
+│                                             (Bronze → Silver → Gold + ML)
 │
 ├── docs/
-│   └── Richard_Clay_Proposal.docx   Project proposal (EN)
+│   ├── Richard_Clay_Final_Report.docx       Final report (21 pages, EN)
+│   ├── Richard_Clay_Proposal.docx           Project proposal (EN)
+│   └── report_images/                       Figures used in the report
 │
 └── README.md
 ```
 
-## Planned Data Sources
+> Output directories (`03_Output_Bronze/`, `04_Output_Silver/`, `05_Output_Gold/`)
+> are generated automatically when the notebook is executed.
+
+## Data Sources
 
 | Source | Format | Description |
 |--------|--------|-------------|
-| AgenticAI_Leadership_Dataset_v1.csv | CSV | Main dataset for analysis |
-| agent_execution_logs.csv | CSV | Execution log dataset |
-| external_leadership_benchmarks.json | JSON | Benchmark dataset |
-| openalex_ai_leadership_papers.json | JSON | Academic reference dataset |
+| AgenticAI_Leadership_Dataset_v1.csv | CSV | Main agentic-AI leadership dataset |
+| agent_execution_logs.csv | CSV | Per-agent execution / runtime logs |
+| external_leadership_benchmarks.json | JSON | Industry benchmark scores |
+| openalex_ai_leadership_papers.json | JSON | OpenAlex academic paper metadata |
 
-## Planned Pipeline Architecture
+## Pipeline Architecture
 
 ```
-Raw Data (CSV/JSON/Logs)
-       │
-       ▼
+Raw Data (CSV / JSON / Logs)
+        │
+        ▼
    ┌─────────┐
-   │ BRONZE  │  Clean, validate, deduplicate
+   │ BRONZE  │  Ingest + schema validation → Parquet
    └────┬────┘
         │
         ▼
    ┌─────────┐
-   │ SILVER  │  Enrich, transform, standardize
+   │ SILVER  │  Dedup, median impute, join, NLP mapping → Enriched
    └────┬────┘
         │
         ▼
    ┌─────────┐
-   │  GOLD   │  Analytics-ready outputs, ML models
+   │  GOLD   │  K-Means clustering + Logistic Regression + Star-Schema marts
    └─────────┘
 ```
 
-## Proposed Methodology
+## Star Schema (Gold Layer)
 
-1. **Data Collection** — Ingest multi-source data (CSV, JSON, logs, API references).
-2. **Bronze Layer** — Remove duplicates, handle missing values, and validate schemas.
-3. **Silver Layer** — Enrich and transform data, standardize columns, and join datasets.
-4. **Gold Layer** — Generate analytics-ready outputs and evaluate models.
+- **Fact table** — `ai_enriched_agentic_leadership` (one row per agent, all metrics)
+- **Dimension table** — `ai_cluster_profile` (cluster-level aggregates + semantics)
+- **Dimension table** — `industry_summary` (per-industry performance rollup)
+
+## Machine Learning (Gold Layer)
+
+- **K-Means** clustering (k=3) → semantic labels (Low / Average / High Performer)
+  - Silhouette score: **0.5276**
+- **Logistic Regression** (multiclass, 3-fold CrossValidator) on system-only
+  features (no leakage) → performance-tier classification
+
+## How to Run
+
+1. Install dependencies: `pip install pyspark`
+2. Open `individual_project_pipeline.ipynb` in Jupyter / VS Code
+3. **Run All** — the notebook reads from `data/`, writes Parquet outputs to the
+   `03/04/05_Output_*` folders, and prints layer timings + ML metrics.
+
+> Spark is configured for low-memory machines (`driver.memory=1g`,
+> `spark.sql.shuffle.partitions=4`, AQE enabled).
 
 ## Requirements
 
@@ -78,7 +92,7 @@ Raw Data (CSV/JSON/Logs)
 
 ## Timeline
 
-- **23–24 Jun 2026** — Proposal submission *(Current Phase)*
-- **9–10 Jul 2026** — Paper submission
+- **23–24 Jun 2026** — Proposal
+- **9–10 Jul 2026** — Paper
 - **13 Jul 2026** — Final report
 - **15 Jul 2026** — Demo & presentation
